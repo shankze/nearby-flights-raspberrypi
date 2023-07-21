@@ -15,7 +15,10 @@ def get_config_from_restio():
             response = requests.get(project_properties.REST_DB_URL, headers = {'x-apikey': project_properties.RESTDB_XAPI_KEY})
             config_keys = response.json()
         for item in config_keys:
-            config_dict[item['Key']] = item['Val']
+            config_dict[item['Key']] = True if (item['Val']).lower() == 'true' else(False if (item['Val']).lower() == 'false' else item['Val'])
+        if (len(config_dict) < 2) | ('City' not in config_dict) :
+            print('Error while retrieving config. Using local config properties')
+            return get_config_from_project_properties()
         gui.config_cache = config_dict
         return config_dict
     else:
@@ -27,7 +30,7 @@ def get_dummy_config():
     return [{'_id': '64a9fc0ea1ce302000095f1c', 'Key': 'Width', 'Val': '1'}, {'_id': '649dc81aa1ce302000089012', 'Key': 'City', 'Val': 'Richmond'}]
 
 def get_config_from_project_properties():
-    return {'City':project_properties.location_city_name.value,'Width':1}
+    return {'City':project_properties.location_city_or_airport,'Width':1, 'FilterByOrigin' :project_properties.filter_by_origin, 'FilterByDestination' :project_properties.filter_by_destination}
 
 def get_config():
     if project_properties.use_local_config == True:

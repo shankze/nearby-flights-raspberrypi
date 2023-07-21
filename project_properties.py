@@ -1,7 +1,7 @@
 import secrets
 import location_helper
 
-city_names = {'OMDB':'Dubai, UAE','VOCI':'Kochi, India','OMSJ':'Sharjah, UAE'}
+city_names = {'OMDB':'Dubai, UAE','VOCI':'Kochi, India','OMSJ':'Sharjah, UAE','EDDF':'Frankfurt, Germany','UUWW':'Moscow, Russia','EGCC':'Manchester, UK','UUDD':'Moscow, Russia', 'EGKK':'London Gatwick','EGLL':'London Heathrow'}
 airline_names = {'VTI':'Vistara','IAD':'Air Asia India','JZR':'Jazeera Airways','FDB':'FlyDubai','ABY':'Air Arabia','MEA':'Middle East Airlines','FLA':'Flair Airlines'}
 
 FA_API_KEY = secrets.FA_API_KEY
@@ -13,7 +13,8 @@ RESTDB_XAPI_KEY= secrets.RESTDB_XAPI_KEY
 dummy_data_mode = False
 
 use_local_config = False
-location_city_name = location_helper.Location.Richmond
-#location_airport_code = 'HOU'
+location_city_or_airport = 'Richmond'
 location_boundary_box_from_center = 1
+filter_by_destination = False
+filter_by_origin = False
 

@@ -11,16 +11,16 @@ def get_airport_name_from_api(code,airports_list,call_list):
     if response.status_code == 200:
         airport_name = response.json()['city']
         airports_list[code] = airport_name
-        json_helper.write_to_json(airports_list, "data/airports.json")
+        json_helper.write_to_json(airports_list, "data/airports-names.json")
         return airport_name
     else:
         print('No airport city found for airport ' + code)
         airports_list[code] = 'NA'
-        json_helper.write_to_json(airports_list, "data/airports.json")
+        json_helper.write_to_json(airports_list, "data/airports-names.json")
         return 'NA'
 
 def get_airport_name(airport_code,call_list):
-    airports_file = open("data/airports.json")
+    airports_file = open("data/airports-names.json")
     airports_list = json.load(airports_file)
     airports_file.close()
     if airport_code in airports_list:
