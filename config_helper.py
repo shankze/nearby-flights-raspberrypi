@@ -8,8 +8,12 @@ def get_config_from_restio():
         gui.counter = 0
         print('Config is NONE, getting CONFIG +++++++++++++')
         config_dict = {}
-        response = requests.get(project_properties.REST_DB_URL, headers = {'x-apikey': project_properties.RESTDB_XAPI_KEY})
-        config_keys = response.json()
+        if project_properties.dummy_data_mode == True:
+            print('CONFIG DUMMY DUMMY DUMMY DUMMY DUMMY')
+            config_keys = get_dummy_config()
+        else:
+            response = requests.get(project_properties.REST_DB_URL, headers = {'x-apikey': project_properties.RESTDB_XAPI_KEY})
+            config_keys = response.json()
         for item in config_keys:
             config_dict[item['Key']] = item['Val']
         gui.config_cache = config_dict
@@ -18,6 +22,9 @@ def get_config_from_restio():
         gui.counter = gui.counter + 1
         print('Config exists')
         return gui.config_cache
+
+def get_dummy_config():
+    return [{'_id': '64a9fc0ea1ce302000095f1c', 'Key': 'Width', 'Val': '1'}, {'_id': '649dc81aa1ce302000089012', 'Key': 'City', 'Val': 'Richmond'}]
 
 def get_config_from_project_properties():
     return {'City':project_properties.location_city_name.value,'Width':1}

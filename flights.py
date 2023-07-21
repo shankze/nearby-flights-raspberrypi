@@ -6,10 +6,10 @@ import operator_helper
 import project_properties
 import webscraper
 
-dnp_equipment_codes = ['C68A','EC45','GLF4','FA20','E55P']
+dnp_equipment_codes = ['C68A','EC45','GLF4','FA20','E55P'] # Not Used
 call_list = []
-skip_airline_list = ['LIF','EJA','JSX','FFL','LXJ','DVY']
-skip_equipment_list = ['C550','CL60','LJ34','LJ45','B350','SW4','H25B','E55P','C680','LJ60','C208']
+skip_airline_list = ['LIF','EJA','JSX','FFL','LXJ','DVY','EJM','JRE','JTL','FWK']
+skip_equipment_list = ['C550','CL60','LJ34','LJ45','B350','SW4','H25B','E55P','C680','LJ60','C208','GALX','C750','C56X','F2TH']
 flightid_skip_list = []
 
 def get_from_flightaware(print_results=False):
@@ -112,9 +112,13 @@ def generate_url_for_opensky(location_info, to_add):
 
 def get_from_opensky(flight_aware_cache_dict, config):
     location_info = get_airport_info_from_json(config['City'].upper())
-    opensky_url = generate_url_for_opensky(location_info, float(config['Width']))
-    response = requests.get(opensky_url, auth=(project_properties.OS_USERNAME,project_properties.OS_PASSWORD))
-    flights = response.json()["states"]
+    if project_properties.dummy_data_mode == True:
+        print('OPENSKY DUMMY DUMMY DUMMY DUMMY DUMMY')
+        flights = get_dummy_opensky_response()
+    else:
+        opensky_url = generate_url_for_opensky(location_info, float(config['Width']))
+        response = requests.get(opensky_url, auth=(project_properties.OS_USERNAME,project_properties.OS_PASSWORD))
+        flights = response.json()["states"]
     filtered_flights =[]
     if flights is None:
         return []
@@ -129,7 +133,7 @@ def get_from_opensky(flight_aware_cache_dict, config):
         if flight[1][0] == 'N' and (flight[1][1]).isdigit():
             continue
         if flight[1][0:3] in skip_airline_list :
-            print('Airline in Skip List')
+            print('Airline in Skip List: ', flight[1][0:3])
             continue
         flight_with_data = {
             "id": flight[1],
@@ -140,7 +144,6 @@ def get_from_opensky(flight_aware_cache_dict, config):
             "flight_heading": geographic_helper.get_direction_from_heading(flight[10])
         }
         filtered_flights.append(flight_with_data)
-    #print(filtered_flights)
     sortedFlights = sorted(filtered_flights, key =lambda x:x['distance'])
     counter = 0
     flight_data = []
@@ -151,7 +154,7 @@ def get_from_opensky(flight_aware_cache_dict, config):
                 airline_details_from_fa = flight_aware_cache_dict[flight['id']]
             else:
                 print('NOT IN CACHE: ', flight['id'])
-                airline_details_from_fa = webscraper.get_flight_info(flight['id'], dummy_data=False)
+                airline_details_from_fa = webscraper.get_flight_info(flight['id'])
                 if airline_details_from_fa['airline_name'] == None:
                     airline_name_override = override_operator_if_empty(flight['id'])
                     if airline_name_override != None:
@@ -180,4 +183,7 @@ def get_from_opensky(flight_aware_cache_dict, config):
             break
     return flight_data
 
+def get_dummy_opensky_response():
+    response = [['a5999c', 'N460AA  ', 'United States', 1689649160, 1689649166, -95.2969, 29.7827, 601.98, False, 60.75, 97.79, -1.3, None, 609.6, '3020', False, 0], ['346390', 'EVE862  ', 'Spain', 1689649341, 1689649341, -96.5368, 29.6563, 11887.2, False, 253.83, 52.99, 0, None, 12580.62, '2601', False, 0], ['a33243', 'DAL1708 ', 'United States', 1689649340, 1689649341, -96.1922, 30.0902, 5623.56, False, 198.69, 280.29, 8.13, None, 6004.56, None, False, 0], ['a3b028', 'DAL1345 ', 'United States', 1689649341, 1689649341, -95.869, 29.9127, 8442.96, False, 245.03, 243.97, -5.2, None, 9006.84, '2023', False, 0], ['a385be', 'ASH6333 ', 'United States', 1689649341, 1689649341, -95.1318, 30.4788, 5958.84, False, 182.35, 24.32, 8.78, None, 6362.7, '2465', False, 0], ['a85011', 'N6348J  ', 'United States', 1689649273, 1689649341, -95.4453, 29.8262, 762, False, 57.23, 305.12, -0.65, None, 815.34, None, False, 0], ['abdc78', 'SWA836  ', 'United States', 1689649340, 1689649340, -95.4145, 29.746, 693.42, False, 92.86, 99.57, -1.63, None, 731.52, '2364', False, 0], ['a6aaba', 'DAL867  ', 'United States', 1689649340, 1689649341, -95.4103, 30.4896, 10995.66, False, 229.94, 280.83, 0, None, 11666.22, '6505', False, 0], ['ad526c', 'AAL2476 ', 'United States', 1689649340, 1689649341, -94.6979, 30.5234, 7315.2, False, 230.16, 240.4, 0, None, 7802.88, '1476', True, 0], ['a8fc72', 'UAL1528 ', 'United States', 1689649323, 1689649323, -95.1694, 30.2258, 3703.32, False, 166.98, 39.62, 4.55, None, 3749.04, None, False, 0], ['abfd39', 'SWA939  ', 'United States', 1689649341, 1689649341, -95.575, 30.0689, 8534.4, False, 245.15, 241.55, 0, None, 9098.28, '5717', False, 0], ['a0a837', 'UPS787  ', 'United States', 1689649341, 1689649341, -96.2024, 30.2982, 9525, False, 248.18, 94.4, 9.1, None, 10134.6, '2533', False, 0], ['a33a56', 'N307LJ  ', 'United States', 1689649275, 1689649275, -95.3176, 29.6777, 243.84, False, 59.3, 135.35, -3.25, None, 259.08, '4615', False, 0], ['a6a688', 'N5279F  ', 'United States', 1689649290, 1689649333, -95.4792, 29.7706, 152.4, False, 52.41, 13.63, 0, None, 160.02, '1200', False, 0], ['a298ff', 'N267AA  ', 'United States', 1689649285, 1689649338, -95.7857, 29.6698, 3200.4, False, 75.88, 349.45, -0.33, None, 3398.52, '2556', False, 0], ['abfdd1', 'AAL997  ', 'United States', 1689649340, 1689649340, -94.8186, 29.197, 11277.6, False, 260.36, 149.48, 0, None, 11971.02, '6221', False, 0], ['a56c19', 'AAL2289 ', 'United States', 1689649340, 1689649341, -94.77, 30.0787, 9761.22, False, 238.99, 282.81, 0.33, None, 10386.06, '3770', False, 0], ['a30017', 'N2926E  ', 'United States', 1689649340, 1689649341, -95.4409, 30.4854, 7315.2, False, 222.1, 222.56, 0.33, None, 7802.88, '1646', False, 0], ['ac0448', 'SWA3187 ', 'United States', 1689649341, 1689649341, -96.0063, 30.0509, 3139.44, False, 165.6, 120.63, -4.88, None, 3368.04, '3140', False, 0], ['a58a19', 'LIFE6   ', 'United States', 1689649029, 1689649029, -95.3947, 29.7145, 99.06, False, 11.93, 172.57, -4.55, None, 121.92, '0115', False, 0], ['a448d1', 'UAL8138 ', 'United States', 1689649341, 1689649341, -95.7602, 30.0045, 3208.02, False, 171.69, 283.87, 1.3, None, 3421.38, None, False, 0], ['a00f3f', 'N1025X  ', 'United States', 1689649340, 1689649341, -95.3824, 29.7941, 487.68, False, 55.08, 92.14, 0.65, None, 495.3, None, False, 0]]
+    return response
 

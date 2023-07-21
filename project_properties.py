@@ -10,6 +10,7 @@ OS_PASSWORD = secrets.OS_PASSWORD
 REST_DB_URL = secrets.REST_DB_URL
 CUSTOM_LOCATIONS = secrets.CUSTOM_LOCATIONS
 RESTDB_XAPI_KEY= secrets.RESTDB_XAPI_KEY
+dummy_data_mode = False
 
 use_local_config = False
 location_city_name = location_helper.Location.Richmond
