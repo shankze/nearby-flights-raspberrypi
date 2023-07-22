@@ -176,7 +176,7 @@ if __name__ == '__main__':
 
     #location_dict = project_properties.locations[location]
 
-    app = App(title="Nearby Flights", height=600, width=1000)
+    app = App(title="Nearby Flights", height=600, width=1024)
     app.bg = "white"
     flight_line_1 = Box(app, layout="grid", border=False, height=100, width=940, align="top")
     padding_box_1 = Box(app, align="top", width="fill", height=2)
