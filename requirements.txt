@@ -1,0 +1,7 @@
+guizero
+requests
+haversine
+geographiclib
+bs4
+pytz
+pillow

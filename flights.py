@@ -194,7 +194,7 @@ def get_from_opensky(flight_aware_cache_dict, config):
         flight['destination'] = airline_details_from_fa['destination']
         flight['destination_city'] = get_city_name(airline_details_from_fa['destination'],airline_details_from_fa['destination_city'])
         flight_data.append(flight)
-        print('Flight counter: ', len(flight_data))
+        #print('Flight counter: ', len(flight_data))
         if len(flight_data)>5:
             break
     return flight_data
@@ -206,6 +206,7 @@ def fetch_nearby_flights_from_opensky_api(config, location_info):
         flights = get_dummy_opensky_response()
     else:
         opensky_url = generate_url_for_opensky(location_info, float(config['Width']))
+        print('Opensky Request:' ,opensky_url)
         response = requests.get(opensky_url, auth=(project_properties.OS_USERNAME, project_properties.OS_PASSWORD))
         flights = response.json()["states"]
     return flights

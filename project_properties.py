@@ -12,9 +12,9 @@ CUSTOM_LOCATIONS = secrets.CUSTOM_LOCATIONS
 RESTDB_XAPI_KEY= secrets.RESTDB_XAPI_KEY
 dummy_data_mode = False
 
-use_local_config = False
-location_city_or_airport = 'Richmond'
+use_local_config = True
+location_city_or_airport = 'RICHMOND'
 location_boundary_box_from_center = 1
-filter_by_destination = False
+filter_by_destination = True
 filter_by_origin = False
 
